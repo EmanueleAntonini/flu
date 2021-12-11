@@ -7,5 +7,6 @@ Progetto Reti di Calcolatori
 - **CouchDB**
 - **RabbitMQ**
 
+
 ## Architettura
 ![alt text](https://github.com/EmanueleAntonini/flu/blob/master/Docs/Flu%20architecture.jpg)

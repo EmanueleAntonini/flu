@@ -8,4 +8,4 @@ Progetto Reti di Calcolatori
 - **RabbitMQ**
 
 ## Architettura
-![](./Docs/Flu Architecture.jpg)
+![alt text](https://github.com/EmanueleAntonini/flu/blob/master/Docs/Flu%20architecture.jpg)

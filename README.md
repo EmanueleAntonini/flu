@@ -9,4 +9,4 @@ Progetto Reti di Calcolatori
 
 
 ## Architettura
-![alt text](https://github.com/EmanueleAntonini/flu/blob/master/Docs/Flu%20architecture.jpg)
+![alt text](./Docs/Flu_architecture.jpg)

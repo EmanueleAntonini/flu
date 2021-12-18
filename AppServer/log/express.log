@@ -1,0 +1,2 @@
+::1 - - [Sat, 18 Dec 2021 08:27:20 GMT] "GET / HTTP/1.1" 200 11 "-" "PostmanRuntime/7.28.4"
+::1 - - [Sat, 18 Dec 2021 08:28:47 GMT] "GET /sessions/connect HTTP/1.1" 500 51 "-" "PostmanRuntime/7.28.4"

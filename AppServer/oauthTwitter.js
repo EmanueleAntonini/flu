@@ -13,7 +13,6 @@ var app = express();
 var VERSION = '1.7.1'
 
 var fs = require('fs');
-
 var _twitterConsumerKey = "hiH7HzRjlXNEN9hO3B6N4r8pk";
 var _twitterConsumerSecret = "JQVxxgqKCQXvGIAAZEwdydfWtfH2TbU2IWib6g1OX7fqJOOqLY";
 
@@ -50,51 +49,7 @@ app.get('/sessions/connect', function(req, res){
 });
 
 app.get('/sessions/callback', function(req, res){
-    console.log(req)
-    var i = 0;
-    var oauthRequestToken = ""
-    var oauthRequestTokenSecret = ""
-    for(var key in req.sessionStore.sessions){ //perchè ha nome variabile -> faccio un for su tutti i campi del json (è solo 1 per questo pezzo)
-        var reqS = JSON.parse(req.sessionStore.sessions[key])
-        for(key2 in reqS){                      //qui ho tre campi -> primo non server, altri 2 contengono oauthRequestToken e oauthRequestTokenSecret
-            //console.log(reqS[key2])
-            if(i == 1)
-                oauthRequestToken = reqS[key2]
-            if(i == 2)
-                oauthRequestTokenSecret = reqS[key2]
-            i = i+1
-        }
-    }
-    console.log(">>"+oauthRequestToken);
-    console.log(">>"+oauthRequestTokenSecret);
-    console.log(">>"+req.query.oauth_verifier);
-    consumer().getOAuthAccessToken(oauthRequestToken, oauthRequestTokenSecret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results) {
-        if (error) {
-            console.log(error)
-            res.status(500).send("Error getting OAuth access token : " + (error) + "["+oauthAccessToken+"]"+ "["+oauthAccessTokenSecret+"]"+ "["+(results)+"]");
-        } else {
-            //consumer().get("https://api.twitter.com/1.1/account/verify_credentials.json", oauthAccessToken, oauthAccessTokenSecret, function (error, data, response) {
-            /* status = "prova_post_via_node_server"
-            url = "https://api.twitter.com/1.1/statuses/update.json" */
-
-            var client = new Twitter({
-                consumer_key: _twitterConsumerKey,
-                consumer_secret: _twitterConsumerSecret,
-                access_token_key: oauthAccessToken,
-                access_token_secret: oauthAccessTokenSecret
-            });
-
-            client.post('statuses/update', {status: 'prova Node server'},  function(error, tweet, response) {
-                if(error){ 
-                    console.log(error);
-                    res.send("NO")
-                }
-                else{
-                    res.send("OK")
-                }
-            }); 
-        }
-    });
+    
 });
 
 app.listen(8080) 

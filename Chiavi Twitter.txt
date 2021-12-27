@@ -1,0 +1,20 @@
+Credenziali account Twitter:
+user:Antoniniemanuele97@gmail.com
+pw:Lucchett0
+
+Keys e Token per uso API OAuth:
+
+Api Key
+hiH7HzRjlXNEN9hO3B6N4r8pk					//
+								// Rappresentano username e password dell'applicazione
+Api Key secret							// per Twitter
+JQVxxgqKCQXvGIAAZEwdydfWtfH2TbU2IWib6g1OX7fqJOOqLY		// 
+
+Access Token							//
+1098885460556988416-wQG3IH1zdNoNkn66MV7RMBaZwnlMnD		//
+								// OAuth2
+Access Token Secret						//
+ZgFQD4wnBIdWlZeZY5YkW0tCGyeilHopEWlimWjid3CUZ			//
+
+Bearer Token
+AAAAAAAAAAAAAAAAAAAAAH3zLQEAAAAA7nM11LIkcmJvZL9MsQ4zlBYZpmg%3DcZ97AckutD4HRM1TW99XI4hpFvk7yu3JSwWQsUNNb1CtaHy9o0 //Token finale

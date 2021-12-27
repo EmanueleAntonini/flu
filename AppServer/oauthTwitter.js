@@ -33,6 +33,7 @@ app.get('/', function(req, res){
     res.send('Hello World');
 });
 
+
 app.get('/sessions/connect', function(req, res){
     consumer().getOAuthRequestToken(function(error, oauthToken, oauthTokenSecret, results){
         if (error) {
@@ -43,7 +44,7 @@ app.get('/sessions/connect', function(req, res){
             console.log(oauthToken)
             console.log(oauthTokenSecret)
             req.session.oauthRequestTokenSecret = oauthTokenSecret;
-            res.redirect("https://twitter.com/oauth/authorize?oauth_token="+req.session.oauthRequestToken);
+            res.redirect("https://api.twitter.com/oauth/authorize?oauth_token="+req.session.oauthRequestToken);
         }
     });
 });

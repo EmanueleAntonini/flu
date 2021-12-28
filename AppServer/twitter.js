@@ -1,84 +1,85 @@
+var express = require('express');
+const { json } = require('express/lib/response');
+const res = require('express/lib/response');
+const GNEWS_TOKEN = '257ef7e1e8f8362a1397ae3a16f1c56e';
+const TWITTER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAH3zLQEAAAAA7nM11LIkcmJvZL9MsQ4zlBYZpmg%3DcZ97AckutD4HRM1TW99XI4hpFvk7yu3JSwWQsUNNb1CtaHy9o0';
 var request = require('request');
-var extend = require('deep-extend');
 
-// Package version
-var VERSION = "1.7.1"
-
-function Twitter(options) {
-  if (!(this instanceof Twitter)) { return new Twitter(options) }
-  console.log("version: "+VERSION)
-  this.VERSION = VERSION;
-
-  this.options = extend({
-    consumer_key: null,
-    consumer_secret: null,
-    access_token_key: null,
-    access_token_secret: null,
-    bearer_token: null,
-    rest_base: 'https://api.twitter.com/1.1',
-    stream_base: 'https://stream.twitter.com/1.1',
-    user_stream_base: 'https://userstream.twitter.com/1.1',
-    site_stream_base: 'https://sitestream.twitter.com/1.1',
-    media_base: 'https://upload.twitter.com/1.1',
-    request_options: {
-      headers: {
-        Accept: '*/*',
-        Connection: 'close',
-        'User-Agent': 'node-twitter/' + VERSION
-      }
+class Influencer {
+    constructor() { };
+    setUsername(username) {
+        this.username = username;
     }
-  }, options);
-
-  var authentication_options = {
-    oauth: {
-      consumer_key: this.options.consumer_key,
-      consumer_secret: this.options.consumer_secret,
-      token: this.options.access_token_key,
-      token_secret: this.options.access_token_secret
+    setFluScore(fluScore) {
+        this.fluScore = fluScore;
     }
-  };
-
-  this.request = request.defaults(
-    extend(
-      this.options.request_options,
-      authentication_options
-    )
-  );
-
-  // Check if Promise present
-  this.allow_promise = (typeof Promise === 'function');
 }
 
-Twitter.prototype.__request = function(method, path, params, callback) {
-  // Build the options to pass to our custom request object
-  console.log(params)
-  var options = {
-    method: 'post',//method.toLowerCase(),  // Request method - get || post
-    url: "https://api.twitter.com/1.1/statuses/update.json"//this.__buildEndpoint(path, base) // Generate url
-  }
-  // Pass form data if post  
-  var formKey = 'form';
+function calculateFluScore(gNews, twitter) {
+    var score = (7 * gNews + 10 * twitter) / 20;
+    return score;
+}
 
-  options[formKey] = params;
+function searchGNewsNews(query) {
+    return new Promise(function (resolve, reject) {
+        var options = { url: "https://gnews.io/api/v4/search?q=" + query + "&token=" + GNEWS_TOKEN };
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                resolve(JSON.parse(body));
+            }
+            else {
+                reject(error);
+            }
+        });
+    });
+}
 
-  this.request(options, function(error, response, data) {
-    // request error
-    if (error) {
-      return callback(error, data, response);
-    }
-    data = JSON.parse(data);
-
-    if (data.errors !== undefined) {
-      return callback(data.errors, data, response);
-    }
-    callback(null, data, response);
+function searchTweets(query) {
+  return new Promise(function (resolve, reject) {
+      var options = { url: "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&token=" + TWITTER_TOKEN };
+      request.get(options, function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+              resolve(JSON.parse(body));
+          }
+          else {
+              reject(error);
+          }
+      });
   });
+}
 
-};
+var app = express();
 
-Twitter.prototype.post = function(url, params, callback) {
-  return this.__request('post', url, params, callback);
-};
+app.get('/influencer', function (req, res) {
 
+    var userDefinition = searchGNewsNews(req.query.username);
+    userDefinition.then(function (data) {
+        gNewsScore = data.totalArticles;
+        return gNewsScore;
+    }).then(function (gNewsScore) {
+        var user = new Influencer();
+        user.setUsername(req.query.username);
+        user.setFluScore(calculateFluScore(gNewsScore, 0));
+        res.send(user);
+    }
+    )
 
-module.exports = Twitter;
+});
+
+app.get('/twitter', function (req, res) {
+
+  var userDefinition = searchTweets(req.query.username);
+  userDefinition.then(function (data) {
+      twitterScore = meta.result_count;
+      return twitterScore;
+  }).then(function (twitterScore) {
+      var user = new Influencer();
+      user.setUsername(req.query.username);
+      user.setFluScore(calculateFluScore(0, twitterScore));
+      res.send(user);
+  }
+  )
+
+});
+
+app.listen(8089);

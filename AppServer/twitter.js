@@ -5,6 +5,7 @@ const res = require('express/lib/response');
 const GNEWS_TOKEN = '257ef7e1e8f8362a1397ae3a16f1c56e';
 const TWITTER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAH3zLQEAAAAA7nM11LIkcmJvZL9MsQ4zlBYZpmg%3DcZ97AckutD4HRM1TW99XI4hpFvk7yu3JSwWQsUNNb1CtaHy9o0';
 var request = require('request');
+const logger = require('../Logger/logProducer.js');
 
 class Influencer {
     constructor() { };
@@ -125,5 +126,9 @@ app.get('/likes', function (req, res) {
     ).catch(error => console.log(error.message));
 
 });
+
+app.get('/provaLog',function(req,res){
+    logger.log('ciao','debug');
+})
 
 app.listen(8089);

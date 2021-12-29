@@ -35,17 +35,22 @@ function searchGNewsNews(query) {
 }
 
 function searchTweets(query) {
-  return new Promise(function (resolve, reject) {
-      var options = { url: "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&token=" + TWITTER_TOKEN };
-      request.get(options, function (error, response, body) {
-          if (!error && response.statusCode == 200) {
-              resolve(JSON.parse(body));
-          }
-          else {
-              reject(error);
-          }
-      });
-  });
+    return new Promise(function (resolve, reject) {
+        var options = {
+            url: "https://api.twitter.com/2/tweets/search/recent?query=" + query,
+            headers: {
+                'Authorization': 'Bearer ' + TWITTER_TOKEN
+            }
+        };
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                resolve(JSON.parse(body));
+            }
+            else {
+                reject(error);
+            }
+        });
+    });
 }
 
 var app = express();
@@ -68,17 +73,17 @@ app.get('/influencer', function (req, res) {
 
 app.get('/twitter', function (req, res) {
 
-  var userDefinition = searchTweets(req.query.username);
-  userDefinition.then(function (data) {
-      twitterScore = meta.result_count;
-      return twitterScore;
-  }).then(function (twitterScore) {
-      var user = new Influencer();
-      user.setUsername(req.query.username);
-      user.setFluScore(calculateFluScore(0, twitterScore));
-      res.send(user);
-  }
-  )
+    var userDefinition = searchTweets(req.query.username);
+    userDefinition.then(function (data) {
+        twitterScore = data.meta.result_count;
+        return twitterScore;
+    }).then(function (twitterScore) {
+        var user = new Influencer();
+        user.setUsername(req.query.username);
+        user.setFluScore(calculateFluScore(0, twitterScore));
+        res.send(user);
+    }
+    ).catch(error => console.log(error.message));
 
 });
 

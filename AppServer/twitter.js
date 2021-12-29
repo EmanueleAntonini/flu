@@ -1,3 +1,4 @@
+const { query } = require('express');
 var express = require('express');
 const { json } = require('express/lib/response');
 const res = require('express/lib/response');
@@ -10,13 +11,16 @@ class Influencer {
     setUsername(username) {
         this.username = username;
     }
+    setId(id){
+        this.id = id;
+    }
     setFluScore(fluScore) {
         this.fluScore = fluScore;
     }
 }
 
-function calculateFluScore(gNews, twitter) {
-    var score = (7 * gNews + 10 * twitter) / 20;
+function calculateFluScore(gNews, twitter, likes) {
+    var score = (7 * gNews + 10 * twitter + 8 * likes ) / 30;
     return score;
 }
 
@@ -53,6 +57,26 @@ function searchTweets(query) {
     });
 }
 
+function likes(query) {
+    return new Promise(function (resolve, reject) {
+        var options = {
+            url: "https://api.twitter.com/2/tweets/" + query + "/liking_users",
+            headers: {
+                'Authorization': 'Bearer ' + TWITTER_TOKEN
+            }
+            
+        };
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                resolve(JSON.parse(body));
+            }
+            else {
+                reject(error);
+            }
+        });
+    });
+}
+
 var app = express();
 
 app.get('/influencer', function (req, res) {
@@ -64,11 +88,10 @@ app.get('/influencer', function (req, res) {
     }).then(function (gNewsScore) {
         var user = new Influencer();
         user.setUsername(req.query.username);
-        user.setFluScore(calculateFluScore(gNewsScore, 0));
+        user.setFluScore(calculateFluScore(gNewsScore, 0, 0));
         res.send(user);
     }
     )
-
 });
 
 app.get('/twitter', function (req, res) {
@@ -80,7 +103,23 @@ app.get('/twitter', function (req, res) {
     }).then(function (twitterScore) {
         var user = new Influencer();
         user.setUsername(req.query.username);
-        user.setFluScore(calculateFluScore(0, twitterScore));
+        user.setFluScore(calculateFluScore(0, twitterScore, 0));
+        res.send(user);
+    }
+    ).catch(error => console.log(error.message));
+
+});
+
+app.get('/likes', function (req, res) {
+
+    var userDefinition = likes(req.query.id);
+    userDefinition.then(function (data) {
+        likesScore = data.meta.result_count;
+        return likesScore;
+    }).then(function (likesScore) {
+        var user = new Influencer();
+        user.setId(req.query.id);
+        user.setFluScore(calculateFluScore(0, 0, likesScore));
         res.send(user);
     }
     ).catch(error => console.log(error.message));

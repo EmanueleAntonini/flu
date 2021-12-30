@@ -15,14 +15,28 @@ class Influencer {
     setId(id){
         this.id = id;
     }
+    setRetweet(retweet){
+        this.retweet = retweet;
+    }
+    setReply(reply){
+        this.reply = reply;
+    }
+    setLike(like){
+        this.like = like;
+    }
     setFluScore(fluScore) {
         this.fluScore = fluScore;
     }
 }
 
-function calculateFluScore(gNews, twitter, likes, retweets) {
-    var score = (7 * gNews + 10 * twitter + 8 * likes + 8 * retweets) / 40;
+function calculateFluScore(gNews, twitter) {
+    var score = (7 * gNews + 10 * twitter ) / 20;
     return score;
+}
+
+function stampTweet(tweet) {
+    var stamp = tweet;
+    return stamp;
 }
 
 function searchGNewsNews(query) {
@@ -42,50 +56,10 @@ function searchGNewsNews(query) {
 function searchTweets(query) {
     return new Promise(function (resolve, reject) {
         var options = {
-            url: "https://api.twitter.com/2/tweets/search/recent?query=" + query,
+            url: "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&tweet.fields=public_metrics" ,
             headers: {
                 'Authorization': 'Bearer ' + TWITTER_TOKEN
             }
-        };
-        request.get(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                resolve(JSON.parse(body));
-            }
-            else {
-                reject(error);
-            }
-        });
-    });
-}
-
-function likes(query) {
-    return new Promise(function (resolve, reject) {
-        var options = {
-            url: "https://api.twitter.com/2/tweets/" + query + "/liking_users",
-            headers: {
-                'Authorization': 'Bearer ' + TWITTER_TOKEN
-            }
-            
-        };
-        request.get(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                resolve(JSON.parse(body));
-            }
-            else {
-                reject(error);
-            }
-        });
-    });
-}
-
-function retweets(query) {
-    return new Promise(function (resolve, reject) {
-        var options = {
-            url: "https://api.twitter.com/2/tweets/" + query + "/retweeted_by",
-            headers: {
-                'Authorization': 'Bearer ' + TWITTER_TOKEN
-            }
-            
         };
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -109,7 +83,7 @@ app.get('/influencer', function (req, res) {
     }).then(function (gNewsScore) {
         var user = new Influencer();
         user.setUsername(req.query.username);
-        user.setFluScore(calculateFluScore(gNewsScore, 0, 0, 0));
+        user.setFluScore(calculateFluScore(gNewsScore, 0));
         res.send(user);
     }
     )
@@ -124,44 +98,69 @@ app.get('/twitter', function (req, res) {
     }).then(function (twitterScore) {
         var user = new Influencer();
         user.setUsername(req.query.username);
-        user.setFluScore(calculateFluScore(0, twitterScore, 0, 0));
+        user.setFluScore(calculateFluScore(0, twitterScore));
         res.send(user);
-    }
-    ).catch(error => console.log(error.message));
-
+    }).catch(error => console.log(error.message));
 });
 
-app.get('/likes', function (req, res) {
+app.get('/id', function (req, res) {
 
-    var userDefinition = likes(req.query.id);
+    var userDefinition = searchTweets(req.query.username);
     userDefinition.then(function (data) {
-        likesScore = data.meta.result_count;
-        return likesScore;
-    }).then(function (likesScore) {
+        for (var i=0; i < data.meta.result_count; ++i){
+            idTweet = data.data[i].id;
+            return idTweet;
+        }
+    }).then(function (idTweet) {
         var user = new Influencer();
-        user.setId(req.query.id);
-        user.setFluScore(calculateFluScore(0, 0, likesScore, 0));
+        user.setUsername(req.query.username);
+        user.setId(stampTweet(idTweet));
         res.send(user);
-    }
-    ).catch(error => console.log(error.message));
-
+    }).catch(error => console.log(error.message));
 });
 
-app.get('/retweets', function (req, res) {
+app.get('/retweet', function (req, res) {
 
-    var userDefinition = likes(req.query.id);
+    var userDefinition = searchTweets(req.query.username);
     userDefinition.then(function (data) {
-        retweetsScore = data.meta.result_count;
-        return retweetsScore;
-    }).then(function (retweetsScore) {
+        retweetCount = data.data[0].public_metrics.retweet_count;
+        return retweetCount;
+    }).then(function (retweetCount) {
         var user = new Influencer();
-        user.setId(req.query.id);
-        user.setFluScore(calculateFluScore(0, 0, 0, retweetsScore));
+        user.setUsername(req.query.username);
+        user.setRetweet(stampTweet(retweetCount));
         res.send(user);
-    }
-    ).catch(error => console.log(error.message));
-
+    }).catch(error => console.log(error.message));
 });
+
+app.get('/reply', function (req, res) {
+
+    var userDefinition = searchTweets(req.query.username);
+    userDefinition.then(function (data) {
+        replyCount = data.data[0].public_metrics.reply_count;
+        return replyCount;
+    }).then(function (replyCount) {
+        var user = new Influencer();
+        user.setUsername(req.query.username);
+        user.setReply(stampTweet(replyCount));
+        res.send(user);
+    }).catch(error => console.log(error.message));
+});
+
+app.get('/like', function (req, res) {
+
+    var userDefinition = searchTweets(req.query.username);
+    userDefinition.then(function (data) {
+        likeCount = data.data[0].public_metrics.like_count;
+        return likeCount;
+    }).then(function (likeCount) {
+        var user = new Influencer();
+        user.setUsername(req.query.username);
+        user.setLike(stampTweet(likeCount));
+        res.send(user);
+    }).catch(error => console.log(error.message));
+});
+
 
 app.get('/provaLog',function(req,res){
     logger.log('ciao','debug');

@@ -24,6 +24,9 @@ class Influencer {
     setLike(like){
         this.like = like;
     }
+    setFollower(follower){
+        this.follower = follower;
+    }
     setFluScore(fluScore) {
         this.fluScore = fluScore;
     }
@@ -38,6 +41,11 @@ function stampTweet(tweet) {
     var stamp = tweet;
     return stamp;
 }
+ function listTweet(tweet) {
+     var listTweet = [];
+     listTweet.push(tweet);
+     return listTweet;
+ }
 
 function searchGNewsNews(query) {
     return new Promise(function (resolve, reject) {
@@ -57,6 +65,25 @@ function searchTweets(query) {
     return new Promise(function (resolve, reject) {
         var options = {
             url: "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&tweet.fields=public_metrics" ,
+            headers: {
+                'Authorization': 'Bearer ' + TWITTER_TOKEN
+            }
+        };
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                resolve(JSON.parse(body));
+            }
+            else {
+                reject(error);
+            }
+        });
+    });
+}
+
+function viewFollower(path) {
+    return new Promise(function (resolve, reject) {
+        var options = {
+            url: "https://api.twitter.com/2/users/by/username/:username?user.fields=public_metrics" ,
             headers: {
                 'Authorization': 'Bearer ' + TWITTER_TOKEN
             }
@@ -114,7 +141,7 @@ app.get('/id', function (req, res) {
     }).then(function (idTweet) {
         var user = new Influencer();
         user.setUsername(req.query.username);
-        user.setId(stampTweet(idTweet));
+        user.setId(listTweet(idTweet));
         res.send(user);
     }).catch(error => console.log(error.message));
 });
@@ -128,7 +155,7 @@ app.get('/retweet', function (req, res) {
     }).then(function (retweetCount) {
         var user = new Influencer();
         user.setUsername(req.query.username);
-        user.setRetweet(stampTweet(retweetCount));
+        user.setRetweet(listTweet(retweetCount));
         res.send(user);
     }).catch(error => console.log(error.message));
 });
@@ -157,6 +184,20 @@ app.get('/like', function (req, res) {
         var user = new Influencer();
         user.setUsername(req.query.username);
         user.setLike(stampTweet(likeCount));
+        res.send(user);
+    }).catch(error => console.log(error.message));
+});
+
+app.get('/follower/', function (req, res) {
+
+    var userDefinition = viewFollower(req.path.username);
+    userDefinition.then(function (data) {
+        followerCount = data.public_metrics.followers_count;
+        return followerCount;
+    }).then(function (followerCount) {
+        var user = new Influencer();
+        user.setUsername(req.path.username);
+        user.set(stampTweet(followerCount));
         res.send(user);
     }).catch(error => console.log(error.message));
 });

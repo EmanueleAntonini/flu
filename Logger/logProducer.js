@@ -11,7 +11,7 @@ function log(msg,cat){
         }
         var exchange = 'flu_logs';
         var args = process.argv.slice(2);
-        var message = msg + ' ' + cat;
+        var message = "["+cat+"]"+"-- "+msg;
         var severity = (args.length > 0) ? args[0] : 'info';
 
         channel.assertExchange(exchange, 'direct', {
@@ -23,7 +23,6 @@ function log(msg,cat){
 
     setTimeout(function() {
         connection.close();
-        process.exit(0);
     }, 500);
 });
 }

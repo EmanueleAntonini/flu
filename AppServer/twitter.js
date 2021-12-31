@@ -1,39 +1,18 @@
-const { query } = require('express');
 var express = require('express');
-const { json } = require('express/lib/response');
-const res = require('express/lib/response');
-const GNEWS_TOKEN = '257ef7e1e8f8362a1397ae3a16f1c56e';
-const TWITTER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAH3zLQEAAAAA7nM11LIkcmJvZL9MsQ4zlBYZpmg%3DcZ97AckutD4HRM1TW99XI4hpFvk7yu3JSwWQsUNNb1CtaHy9o0';
 var request = require('request');
-const logger = require('../Logger/logProducer.js');
+const gNewsClient = require('../ExternalClients/GnewsClient');
+const twitterClient= require('../ExternalClients/TwitterClient');
+const logger = require('../Logger/logProducer');
+var {Influencer} = require('../DomainEntities/Influencer');
 
-class Influencer {
-    constructor() { };
-    setUsername(username) {
-        this.username = username;
-    }
-    setId(id){
-        this.id = id;
-    }
-    setRetweet(retweet){
-        this.retweet = retweet;
-    }
-    setReply(reply){
-        this.reply = reply;
-    }
-    setLike(like){
-        this.like = like;
-    }
-    setFollower(follower){
-        this.follower = follower;
-    }
-    setFluScore(fluScore) {
-        this.fluScore = fluScore;
-    }
-}
 
 function calculateFluScore(gNews, twitter) {
-    var score = (7 * gNews + 10 * twitter ) / 20;
+    var score = (4 * gNews + 6 * twitter ) / 20;
+    return score;
+}
+
+function calculateTwitterScore(twitterParams) {
+    var score = (4*twitterParams.like+1*twitterParams.reply+2*twitterParams.retweet+3*twitterParams.followers) / 40;
     return score;
 }
 
@@ -47,38 +26,8 @@ function stampTweet(tweet) {
      return listTweet;
  }
 
-function searchGNewsNews(query) {
-    return new Promise(function (resolve, reject) {
-        var options = { url: "https://gnews.io/api/v4/search?q=" + query + "&token=" + GNEWS_TOKEN };
-        request.get(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                resolve(JSON.parse(body));
-            }
-            else {
-                reject(error);
-            }
-        });
-    });
-}
 
-function searchTweets(query) {
-    return new Promise(function (resolve, reject) {
-        var options = {
-            url: "https://api.twitter.com/2/tweets/search/recent?query=" + query + "&tweet.fields=public_metrics" ,
-            headers: {
-                'Authorization': 'Bearer ' + TWITTER_TOKEN
-            }
-        };
-        request.get(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                resolve(JSON.parse(body));
-            }
-            else {
-                reject(error);
-            }
-        });
-    });
-}
+
 
 function viewFollower(path) {
     return new Promise(function (resolve, reject) {
@@ -103,7 +52,7 @@ var app = express();
 
 app.get('/influencer', function (req, res) {
 
-    var userDefinition = searchGNewsNews(req.query.username);
+    var userDefinition = gNewsClient.searchGNewsNews(req.query.username);
     userDefinition.then(function (data) {
         gNewsScore = data.totalArticles;
         return gNewsScore;
@@ -118,13 +67,13 @@ app.get('/influencer', function (req, res) {
 
 app.get('/twitter', function (req, res) {
 
-    var userDefinition = searchTweets(req.query.username);
+    var userDefinition = twitterClient.searchTweets(req.query.q);
     userDefinition.then(function (data) {
         twitterScore = data.meta.result_count;
         return twitterScore;
     }).then(function (twitterScore) {
         var user = new Influencer();
-        user.setUsername(req.query.username);
+        user.setUsername(req.query.q);
         user.setFluScore(calculateFluScore(0, twitterScore));
         res.send(user);
     }).catch(error => console.log(error.message));
@@ -206,5 +155,17 @@ app.get('/follower/', function (req, res) {
 app.get('/provaLog',function(req,res){
     logger.log('ciao','debug');
 })
+
+app.get('/influencer2', async function (req, res) {
+
+    var twitterParams = await twitterClient.retrieveTwitterParams(req.query.twitter_query,req.query.twitter_username);
+    var fullName=req.query.name+" "+req.query.surname;
+    var gNewsScore = await gNewsClient.searchGNewsNews(fullName);
+    var twitterScore = calculateTwitterScore(twitterParams);
+    var fluScore = calculateFluScore(gNewsScore,twitterScore);
+    var influencer = new Influencer(req.query.name,req.query.surname,fullName,req.query.twitter_username,twitterParams,gNewsScore,twitterScore,fluScore);
+
+    res.send(influencer);
+});
 
 app.listen(8089);

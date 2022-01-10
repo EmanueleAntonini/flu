@@ -1,0 +1,27 @@
+version: '1'
+services:
+    flu1:
+        build: ./Flu
+    flu2:
+        build: ./Flu
+    nginx:
+        build: ./Nginx
+        ports:
+            - "8080:80"
+        depends_on:
+            - flu1
+            - flu2
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: 'rabbitmq'
+        ports:
+            - 5672:5672
+            - 15672:15672
+    logger:
+        build: ./Logger
+        volumes:
+            - C:/flu/log/:/usr/src/app/log/
+        restart: on-failure 
+        links:
+            - rabbitmq  
+        

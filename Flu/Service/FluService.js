@@ -13,7 +13,7 @@ function calculateTwitterScore(twitterParams) {
 }
 
 async function defineInfluencer(req) {
-    var twitterParams = await twitterClient.retrieveTwitterParams(req.query.twitter_query, req.query.twitter_username);
+    var twitterParams = await twitterClient.retrieveTwitterParams("from:"+req.query.twitter_username,req.query.twitter_username);
     var fullName = req.query.name + " " + req.query.surname;
     var gNewsScore = await gNewsClient.searchGNewsNews(fullName);
     var twitterScore = calculateTwitterScore(twitterParams);

@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 var amqp = require('amqplib/callback_api');
-const fs = require('fs')
 
-amqp.connect('amqp://rabbitmq', function (error0, connection) {
+amqp.connect('amqp://localhost', function (error0, connection) {
     if (error0) {
         throw error0;
     }
@@ -29,12 +28,7 @@ amqp.connect('amqp://rabbitmq', function (error0, connection) {
 
 
             channel.consume(q.queue, function (msg) {
-                fs.appendFile('/usr/src/app/log/logs.log', msg.content.toString(), err => {
-                    if (err) {
-                        console.error(err)
-                        return
-                    }
-                })
+                console.log(" [x] %s: '%s'", msg.fields.routingKey, msg.content.toString());
             }, {
                 noAck: true
             });

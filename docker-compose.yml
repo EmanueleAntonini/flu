@@ -8,6 +8,9 @@ services:
         build: ./Nginx
         ports:
             - "8080:80"
+            - "443:443"
+        volumes:
+            - ./TLS:/etc/nginx/certs/
         depends_on:
             - flu1
             - flu2
@@ -20,7 +23,7 @@ services:
     logger:
         build: ./Logger
         volumes:
-            - C:/flu/log/:/usr/src/app/log/
+            - ./log/:/usr/src/app/log/
         restart: on-failure 
         links:
             - rabbitmq  

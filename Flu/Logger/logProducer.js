@@ -4,7 +4,7 @@ require('dotenv').config({ path: '../.env' })
 const RABBITMQ_PATH = process.env.RABBITMQ_PATH;
 
 function log(msg, cat) {
-    amqp.connect("amqp://rabbitmq", function (error0, connection) {
+    amqp.connect("amqp://127.0.0.1", function (error0, connection) {
         if (error0) {
             throw error0;
         }

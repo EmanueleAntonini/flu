@@ -2,6 +2,7 @@ const gNewsClient = require('../ExternalClients/GnewsClient');
 const twitterClient = require('../ExternalClients/TwitterClient');
 var { Influencer } = require('../DomainEntities/Influencer');
 const logger = require('../Logger/logProducer');
+var request2server = require('request');
 
 function validateRequest(req) {
     if (!req.query.twitter_username || req.query.twitter_username.length == 0 || !req.query.name || req.query.name.length == 0 || !req.query.surname || req.query.surname.length == 0)
@@ -30,6 +31,22 @@ async function defineInfluencer(req) {
         var twitterScore = calculateTwitterScore(twitterParams);
         var fluScore = calculateFluScore(gNewsScore, twitterScore);
         var influencer = new Influencer(req.query.name, req.query.surname, fullName, req.query.twitter_username, twitterParams, gNewsScore, twitterScore, fluScore);
+        request2server({
+            url: 'http://admin:admin@127.0.0.1:5984/flu_database/'+req.query.twitter_username, 
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(influencer)
+    
+        }, function(error, response, body){
+            if(error) {
+                console.log(error);
+            } else {
+                res.send(response.statusCode+" "+body)
+                console.log(response.statusCode, body);
+            }
+        });
         return influencer;
     } catch (error) {
         logger.log("Error while defining user: " + req.query.twitter_username , "ERROR");

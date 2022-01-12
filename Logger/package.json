@@ -1,0 +1,24 @@
+{
+    "name": "log",
+    "version": "1.0.0",
+    "description": "log consumer",
+    "main": "logConsumer.js",
+    "dependencies": {
+      "amqplib": "^0.8.0"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://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@github.com/EmanueleAntonini/flu.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/EmanueleAntonini/flu/issues"
+    },
+    "homepage": "https://github.com/EmanueleAntonini/flu#readme"
+  }
+  

@@ -2,10 +2,13 @@ version: '3'
 services:
     flu1:
         build: ./Flu
+        container_name: 'flu_1'
     flu2:
         build: ./Flu
+        container_name: 'flu_2'
     nginx:
         build: ./Nginx
+        container_name: 'flu_nginx'
         ports:
             - "8080:80"
             - "443:443"
@@ -16,12 +19,29 @@ services:
             - flu2
     rabbitmq:
         image: rabbitmq:3-management-alpine
-        container_name: 'rabbitmq'
+        container_name: 'flu_rabbitmq'
         ports:
             - 5672:5672
             - 15672:15672
+    couchdb:
+        image: docker.io/bitnami/couchdb:3
+        container_name: 'flu_couchdb'
+        environment:
+            - COUCHDB_PASSWORD=admin
+        ports:
+            - '5984:5984'
+    dbinitializer:
+        image: curlimages/curl
+        container_name: 'flu_dbinit'
+        deploy:
+            restart_policy:
+                condition: on-failure
+        depends_on:
+            - couchdb
+        command: ["sh","-c","sleep 15 && curl -u admin:admin -X PUT couchdb:5984/flu_database"]
     logger:
         build: ./Logger
+        container_name: 'flu_logger'
         volumes:
             - ./log/:/usr/src/app/log/
         restart: on-failure 

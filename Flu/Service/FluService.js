@@ -32,7 +32,7 @@ async function defineInfluencer(req) {
         var fluScore = calculateFluScore(gNewsScore, twitterScore);
         var influencer = new Influencer(req.query.name, req.query.surname, fullName, req.query.twitter_username, twitterParams, gNewsScore, twitterScore, fluScore);
         request2server({
-            url: 'http://admin:admin@127.0.0.1:5984/flu_database/'+req.query.twitter_username, 
+            url: 'http://admin:admin@couchdb:5984/flu_database/'+req.query.twitter_username, 
             method: 'PUT',
             headers: {
                 'content-type': 'application/json'
@@ -41,10 +41,7 @@ async function defineInfluencer(req) {
     
         }, function(error, response, body){
             if(error) {
-                console.log(error);
-            } else {
-                res.send(response.statusCode+" "+body)
-                console.log(response.statusCode, body);
+                logger.log("Error while saving user: " + req.query.twitter_username , "ERROR");  
             }
         });
         return influencer;

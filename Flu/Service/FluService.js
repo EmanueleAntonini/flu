@@ -3,6 +3,7 @@ const twitterClient = require('../ExternalClients/TwitterClient');
 var { Influencer } = require('../DomainEntities/Influencer');
 const logger = require('../Logger/logProducer');
 var request2server = require('request');
+const couchDbRepo = require('../Repository/CouchDbRepository');
 
 function validateRequest(req) {
     if (!req.query.twitter_username || req.query.twitter_username.length == 0 || !req.query.name || req.query.name.length == 0 || !req.query.surname || req.query.surname.length == 0)
@@ -12,7 +13,7 @@ function validateRequest(req) {
 
 function calculateFluScore(gNews, twitter) {
     var score = (4 * gNews + 6 * twitter) / 20;
-    return score;
+    return parseInt(score);
 }
 
 function calculateTwitterScore(twitterParams) {
@@ -30,25 +31,21 @@ async function defineInfluencer(req) {
         var gNewsScore = await gNewsClient.searchGNewsNews(fullName);
         var twitterScore = calculateTwitterScore(twitterParams);
         var fluScore = calculateFluScore(gNewsScore, twitterScore);
-        var influencer = new Influencer(req.query.name, req.query.surname, fullName, req.query.twitter_username, twitterParams, gNewsScore, twitterScore, fluScore);
-        request2server({
-            url: 'http://admin:admin@couchdb:5984/flu_database/'+req.query.twitter_username, 
-            method: 'PUT',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(influencer)
-    
-        }, function(error, response, body){
-            if(error) {
-                logger.log("Error while saving user: " + req.query.twitter_username , "ERROR");  
-            }
-        });
+        var influencer = new Influencer(req.query.name, req.query.surname, fullName, req.query.twitter_username, twitterParams, gNewsScore, twitterScore, fluScore);  
+        couchDbRepo.putInfluencer(influencer);
         return influencer;
     } catch (error) {
-        logger.log("Error while defining user: " + req.query.twitter_username , "ERROR");
+        logger.log("Error while defining user: " + req.query.twitter_username, "ERROR");
     }
 }
 
+async function getInfluencer(req) {
+    return await couchDbRepo.getInfluencer(req.query.id);
+}
 
-module.exports = { defineInfluencer };
+async function getAllInfluencers() {
+    return await couchDbRepo.getAllInfluencers();
+}
+
+
+module.exports = { defineInfluencer, getInfluencer, getAllInfluencers };

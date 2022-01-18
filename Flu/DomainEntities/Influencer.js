@@ -3,7 +3,7 @@ class Influencer {
         this.name=name;
         this.surname=surname;
         this.fullName=fullName;
-        this.twitterUserName=twitterUsername;
+        this.twitterUsername=twitterUsername;
         this.twitterParams=twitterParams;
         this.gNewsScore=gNewsScore;
         this.twitterScore=twitterScore;

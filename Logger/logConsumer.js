@@ -22,7 +22,7 @@ amqp.connect('amqp://rabbitmq', function (error0, connection) {
             if (error2) {
                 throw error2;
             }
-            console.log(' [*] Waiting for logs. To exit press CTRL+C');
+            console.log(' [*] Waiting for logs');
 
 
             channel.bindQueue(q.queue, exchange, 'logs');

@@ -9,8 +9,16 @@ var corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200
 }
+
+app.use(express.json());
+
 app.use(cors(corsOptions));
 
+/**
+ * @api {get} / Get Flu version
+ * @apiName Flu Version
+ * @apiSuccess {String} Actual Flu version.
+ */
 app.get('/', function (req, res) {
     res.send('flu - Version 1.0.0');
 });
@@ -21,38 +29,12 @@ app.get('/influencer', async function (req, res) {
     res.send(influencer);
 });
 
-app.use(express.json());
-
 app.get('/getInfluencer', async function (req, res) {
-    /*  request2server({
-         url: 'http://admin:admin@couchdb:5984/flu_database/' + req.query.id,
-         method: 'GET',
-     }, function (error, response, body) {
-         if (error) {
-             console.log(error);
-         } else {
-             res.send(body);
-             console.log(response.statusCode, body);
-         }
-     });
-     ; */
     var influencer = await fluService.getInfluencer(req);
     res.send(influencer);
 });
 
 app.get('/getAllInfluencers', async function (req, res) {
-    /*    request2server({
-           url: 'http://admin:admin@couchdb:5984/flu_database/_all_docs',
-           method: 'GET',
-       }, function (error, response, body) {
-           if (error) {
-               console.log(error);
-           } else {
-               res.send(body);
-               console.log(response.statusCode, body);
-           }
-       });
-       ; */
     var influencers = await fluService.getAllInfluencers();
     res.send(influencers);
 });

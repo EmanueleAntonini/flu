@@ -47,7 +47,7 @@ function getAllInfluencers() {
             method: 'GET',
         }, function (error, response, body) {
             if (error) {
-                logger.log("Error while getting user: " + query + "'s GNews search", "ERROR");
+                logger.log("Error during the request", "ERROR");
                 reject(error);
             } else {
                 resolve(body);

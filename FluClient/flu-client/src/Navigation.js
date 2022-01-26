@@ -10,8 +10,8 @@ const Navigation = () => {
           <Navbar.Collapse id="basic-navbar-nav">          
             <Nav className="mr-auto">           
              <Nav.Link href="/" id="home">Home</Nav.Link>
-             <Nav.Link href="/searchform" id="searchform">SearchForm</Nav.Link>
-             <Nav.Link href="/searchdb" id="searchdb">SearchDB</Nav.Link>       
+             <Nav.Link href="/searchform" id="searchform">Influencer</Nav.Link>
+             <Nav.Link href="/searchdb" id="searchdb">Flu Database</Nav.Link>       
             </Nav>          
           </Navbar.Collapse>
       </Navbar>

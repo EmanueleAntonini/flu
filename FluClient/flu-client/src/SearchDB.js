@@ -5,7 +5,6 @@ class SearchDB extends React.Component {
         super(props);
         this.state = {
             numdoc: "",
-            influencer: "",
             documenti: "",
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,11 +16,15 @@ class SearchDB extends React.Component {
         const response = await fetch("http://localhost:8080/getAllInfluencers");
         const data = await response.json();
         this.setState({ numdoc: JSON.stringify(data.total_rows) });
-        this.setState({ influencer: JSON.stringify(data.rows) });
+        var list = [];
         for (var i=0; i < data.total_rows; ++i){
-            this.setState({ documenti: JSON.stringify(data.rows[i]) });
+            list.push("Documento:" + i);
+            list.push("Twitter id: ");
+            list.push(data.rows[i].id);
+            list.push("Identificativo documento: ");
+            list.push(data.rows[i].value);
         }
-
+        this.setState({ documenti: JSON.stringify(list) });
         console.log(data);
         event.preventDefault()
     }
@@ -30,15 +33,15 @@ class SearchDB extends React.Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <h2>
-                        Documenti presenti in flu_database
-                    </h2>
                     <br />
-                    <input type="submit" value="Submit" />
+                    <br />
+                    <br />
+                    <input type="submit" value="View flu_database" />
                 </form>
-                <p><label> Numero documenti presenti in flu_database : </label>{this.state.numdoc}</p>
-                <p><label> Documenti: </label>{this.state.influencer}</p>
-                <p><label> Documento: </label>{this.state.documenti}</p>
+                <p><h2>Documenti presenti in flu_database</h2></p>
+                <p><label><h5> Numero documenti presenti in flu_database : {this.state.numdoc}</h5></label></p>
+                <p><label><h5> Documenti: </h5></label></p>
+                <p>{this.state.documenti}</p>
             </div>
         );
     }

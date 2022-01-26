@@ -57,9 +57,10 @@ class SearchForm extends React.Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <h2>
-                        Ricerca un influencer:
-                    </h2>
+                    <br />
+                    <br />
+                    <br />
+                <p><h2>Ricerca influencer</h2></p>
                     <br />
                     <label>
                         Inserisci il nome:

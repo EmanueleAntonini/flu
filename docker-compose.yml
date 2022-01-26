@@ -1,11 +1,7 @@
 version: '3'
 services:
-    flu1:
+    flu:
         build: ./Flu
-        container_name: 'flu_1'
-    flu2:
-        build: ./Flu
-        container_name: 'flu_2'
     nginx:
         build: ./Nginx
         container_name: 'flu_nginx'
@@ -13,10 +9,9 @@ services:
             - "8080:80"
             - "443:443"
         volumes:
-            - ./TLS:/etc/nginx/certs/
+            - ./TLS:/etc/nginx/certs
         depends_on:
-            - flu1
-            - flu2
+            - flu
     rabbitmq:
         image: rabbitmq:3-management-alpine
         container_name: 'flu_rabbitmq'

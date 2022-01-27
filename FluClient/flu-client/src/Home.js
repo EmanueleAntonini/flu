@@ -23,7 +23,6 @@ const Home = () => {
            <label>il numero di documenti totale e tutti i documenti presenti all'interno del database di couchDB relativi agli influencer cercati nella sezione Influencer.</label></p>
            <br />
            <br />
-           <br />
            <p><label><b>Progetto svolto da:</b></label>
            <br />
            <label><i> Emanuele Antonini</i></label>

@@ -9,4 +9,4 @@ Progetto Reti di Calcolatori
 
 
 ## Architettura
-![alt text](./Docs/architettura flu.jpg)
+![alt text](./Docs/architettura_flu.jpg)

@@ -4,6 +4,7 @@ Progetto Reti di Calcolatori
 
 ## Cosa è "Flu" ?
 "Flu" è un progetto ideato per misurare l'**influenza** di un dato individuo nel contesto dei social media e della rete in genere. 
+<br />
 Lo svolgimento dell'analisi è basato sulla costruzione di un **indicatore composito** formulato sui dati raccolti tramite API offerte dai servizi esterni di Twitter e gNews.
 
 

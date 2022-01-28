@@ -53,7 +53,9 @@ docker-compose up --scale flu=n
 ```
 ### Lato Client:
 
-Per installare ed eseguire "FluClient" è sufficiente posizionarsi con la shell all'interno della directory ./FluClient/flu-client della repository ed eseguire il seguente comando:
+Per installare ed eseguire "FluClient" è sufficiente posizionarsi con la shell all'interno della directory
+<br />
+./FluClient/flu-client della repository ed eseguire il seguente comando:
 
 ```
 npm start

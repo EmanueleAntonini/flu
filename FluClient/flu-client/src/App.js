@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import './App.css';
 import SearchForm from './SearchForm';
 import SearchDB from './SearchDB';
+import SearchDoc from './SearchDoc';
 import Home from './Home';
 import Error from './Error';
 import Navigation from './Navigation';
@@ -26,6 +27,7 @@ class App extends Component {
                <Route path="/" component={Home} exact/>
                <Route path="/searchform" component={SearchForm}/>
                <Route path="/searchdb" component={SearchDB}/>
+               <Routh path="/searchdoc" component={SearchDoc}/>
                <Route component={Error}/>
              </Switch>
              </Col>

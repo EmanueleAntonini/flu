@@ -1,7 +1,6 @@
 var express = require('express');
 const fluService = require('./Service/FluService');
 const cors = require('cors');
-var request2server = require('request');
 
 var app = express();
 

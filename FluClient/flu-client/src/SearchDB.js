@@ -1,4 +1,6 @@
 import React from 'react';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
+import SearchDoc from './SearchDoc';
 
 class SearchDB extends React.Component {
     constructor(props) {
@@ -32,15 +34,19 @@ class SearchDB extends React.Component {
                 <p><h2>Documenti presenti in flu_database</h2></p>
                 <p><label><h5> Numero documenti presenti in flu_database : {this.state.numdoc}</h5></label></p>
                 <p><label><h5> Documenti: </h5></label></p>
+                <BrowserRouter>
                 <div>
                     {this.state.documenti.map(id => {
                         return (<div>
-                                    <p>{id}</p>
+                                    <Link to="/searchdoc">{id}</Link>
+		                            <Route path="/searchdoc" component={SearchDoc}/>
+                                    <p></p>
                                     <br />
                                 </div>)
                         }
                     )}
                 </div>
+                </BrowserRouter>
                 <br />
                 <form onSubmit={this.handleSubmit}>
 

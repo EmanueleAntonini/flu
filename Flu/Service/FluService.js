@@ -2,7 +2,6 @@ const gNewsClient = require('../ExternalClients/GnewsClient');
 const twitterClient = require('../ExternalClients/TwitterClient');
 var { Influencer } = require('../DomainEntities/Influencer');
 const logger = require('../Logger/logProducer');
-var request2server = require('request');
 const couchDbRepo = require('../Repository/CouchDbRepository');
 
 function validateRequest(req) {

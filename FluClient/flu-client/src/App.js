@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
@@ -27,7 +26,7 @@ class App extends Component {
                <Route path="/" component={Home} exact/>
                <Route path="/searchform" component={SearchForm}/>
                <Route path="/searchdb" component={SearchDB}/>
-               <Routh path="/searchdoc" component={SearchDoc}/>
+               <Route path="/searchdoc" component={SearchDoc}/>
                <Route component={Error}/>
              </Switch>
              </Col>

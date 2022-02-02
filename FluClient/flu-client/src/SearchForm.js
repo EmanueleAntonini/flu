@@ -55,12 +55,12 @@ class SearchForm extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="influencer_box">
                 <form onSubmit={this.handleSubmit}>
                     <br />
                     <br />
                     <br />
-                <p><h2>Ricerca influencer</h2></p>
+                <h2>Ricerca influencer</h2>
                     <br />
                     <label>
                         Inserisci il nome:
@@ -79,7 +79,7 @@ class SearchForm extends React.Component {
                     <br />
                     <input type="submit" value="Submit" />
                 </form>
-                <p><h2>Influencer Page</h2></p>
+                <h2>Influencer Page</h2>
                 <p><label> Nome: </label>{this.state.nome}</p>
                 <p><label> Cognome: </label>{this.state.cognome}</p>
                 <p><label> Nome completo: </label>{this.state.nomeCompleto}</p>

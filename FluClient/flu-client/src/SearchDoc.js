@@ -1,46 +1,52 @@
-import React from 'react';
-
-class SearchDoc extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            twitterUsername: "",
-            documento: "",
-        };
-        this.onChangeTwitterUsername = this.onChangeTwitterUsername.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    onChangeTwitterUsername = e => {
-        this.setState({ twitterUsername: e.target.value });
-    };
-
-    async handleSubmit(event) {
-        event.preventDefault()
-        const response = await fetch("http://localhost:8080/getInfluencer?id=" + this.state.twitterUsername);
-        const data = await response.json();
-        this.setState({ documento: JSON.stringify(data) });
-        console.log(data);
-        event.preventDefault()
-    }
+import React, { useState, useEffect } from 'react';
+import { withRouter } from "react-router";
+import { useParams } from 'react-router-dom'
 
 
-    render() {
-        return (
-            <div>
-                <label>
-                        Inserisci lo username di Twitter:
-                    </label>
-                    <input type="text" value={this.state.twitterUsername} onChange={this.onChangeTwitterUsername} />
-                    <br />
-                <p><h2>Documento di: {this.state.twitterUsername} </h2></p>
-                <br />
-                <p> {this.state.documento} </p>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="submit" value="View document" />
-                </form>
-            </div>
-        );
-    }
+
+function SearchDoc() {
+    const [user, setUser] = useState(null);
+    const { twitterid } = useParams();
+    useEffect(() => {
+        async function retrieveUser() {
+
+            const response = await fetch("http://localhost:8080/getInfluencer?id=" + twitterid);
+            const data = await response.json();
+            setUser(data);
+        }
+
+        retrieveUser();
+    }, []);
+
+    console.log(user);
+    return (
+        <div className="influencer_box">
+            <br />
+            <br />
+            <br />
+            <h2>Influencer: {twitterid} </h2>
+            <br />
+            <h5>Anagrafica:</h5>
+            <p><label> Nome: </label> {user && user.name}</p>
+            <p><label> Cognome: </label> {user && user.surname}</p>
+            <p><label> Nome completo: </label> {user && user.fullName}</p>
+            <p><label> Twitter username: </label> {user && user.twitterUsername}</p>
+
+            <h5>Parametri twitter: </h5>
+            <p><label> Likes: </label> {user && user.twitterParams.like}</p>
+            <p><label> Replies: </label> {user && user.twitterParams.reply}</p>
+            <p><label> Retweets: </label> {user && user.twitterParams.retweet}</p>
+            <p><label> Followers: </label> {user && user.twitterParams.followers}</p>
+
+            <h5>Punteggi parziali</h5>
+            <p><label> gNews Score: </label> {user && user.gNewsScore}</p>
+            <p><label> twitter Score: </label> {user && user.twitterScore}</p>
+
+            <h5>Indicatore flu</h5>
+            <p><label> flu Score: </label> {user && user.fluScore}</p>
+        </div>
+    );
 }
-export default SearchDoc;
+
+export default withRouter(SearchDoc);
+

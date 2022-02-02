@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
-import SearchDoc from './SearchDoc';
+import { BrowserRouter, Link } from 'react-router-dom';
+
 
 class SearchDB extends React.Component {
     constructor(props) {
@@ -28,24 +28,26 @@ class SearchDB extends React.Component {
     }
 
     render() {
-        return (
-            <div>
 
-                <p><h2>Documenti presenti in flu_database</h2></p>
-                <p><label><h5> Numero documenti presenti in flu_database : {this.state.numdoc}</h5></label></p>
-                <p><label><h5> Documenti: </h5></label></p>
+        return (
+            <div className="influencer_box">
+                <br />
+                <br />
+                <br />
+                <h2>Documenti presenti in flu_database</h2>
+                <h5> Numero documenti presenti in flu_database : {this.state.numdoc}</h5>
+                <h5> Documenti: </h5>
                 <BrowserRouter>
-                <div>
-                    {this.state.documenti.map(id => {
-                        return (<div>
-                                    <Link to="/searchdoc">{id}</Link>
-		                            <Route path="/searchdoc" component={SearchDoc}/>
-                                    <p></p>
-                                    <br />
-                                </div>)
+                    <div>
+                        {this.state.documenti.map(id => {
+                            return (<div>
+                                <Link target="_blank" to={{ pathname: "/searchdoc/" + id }}>{id}</Link>
+                                <br />
+                                <br />
+                            </div>)
                         }
-                    )}
-                </div>
+                        )}
+                    </div>
                 </BrowserRouter>
                 <br />
                 <form onSubmit={this.handleSubmit}>

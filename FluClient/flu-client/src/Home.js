@@ -7,7 +7,7 @@ const Home = () => {
            <br />
            <br />
            <h1>Home Page</h1>
-           <p><h3>Welcome to flu</h3></p>
+           <h3>Welcome to flu</h3>
            <p><label>"Flu" offre il servizio di poter visulizzare delle analisi di dati, prelevati dai siti GNews e Twitter, </label>
            <br />
            <label> tramite le rispettive API, riguardanti l'andamento di un determinato utente di Twitter. </label>

@@ -15,26 +15,26 @@ import Navigation from './Navigation';
 class App extends Component {
 
   render() {
-      return (      
-         <BrowserRouter>
-          
-            <Navigation />
-            <Container fluid="true">
-            <Row>
+    return (
+      <BrowserRouter>
+
+        <Navigation />
+        <Container fluid="true">
+          <Row>
             <Col>
               <Switch>
-               <Route path="/" component={Home} exact/>
-               <Route path="/searchform" component={SearchForm}/>
-               <Route path="/searchdb" component={SearchDB}/>
-               <Route path="/searchdoc" component={SearchDoc}/>
-               <Route component={Error}/>
-             </Switch>
-             </Col>
-             </Row>
-          </Container> 
-        </BrowserRouter>
-      );
-    }
+                <Route path="/" component={Home} exact />
+                <Route path="/searchform" component={SearchForm} />
+                <Route path="/searchdb" component={SearchDB} />
+                <Route path="/searchdoc/:twitterid" children={<SearchDoc />} />
+                <Route component={Error} />
+              </Switch>
+            </Col>
+          </Row>
+        </Container>
+      </BrowserRouter>
+    );
   }
-   
-  export default App;
+}
+
+export default App;

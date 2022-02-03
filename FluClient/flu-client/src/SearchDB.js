@@ -34,9 +34,8 @@ class SearchDB extends React.Component {
                 <br />
                 <br />
                 <br />
-                <h2>Documenti presenti in flu_database</h2>
-                <h5> Numero documenti presenti in flu_database : {this.state.numdoc}</h5>
-                <h5> Documenti: </h5>
+                <h1>Tutti gli Influencer:</h1>
+                <h5># Influencer trovati : {this.state.numdoc}</h5>
                 <BrowserRouter>
                     <div>
                         {this.state.documenti.map(id => {
@@ -52,7 +51,7 @@ class SearchDB extends React.Component {
                 <br />
                 <form onSubmit={this.handleSubmit}>
 
-                    <input type="submit" value="View flu_database" />
+                    <input type="submit" value="Visualizza tutti" />
                 </form>
             </div>
         );

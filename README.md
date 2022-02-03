@@ -7,13 +7,6 @@ Progetto Reti di Calcolatori
 <br />
 Lo svolgimento dell'analisi è basato sulla costruzione di un **indicatore composito** formulato sui dati raccolti tramite API offerte dai servizi esterni di Twitter e gNews.
 
-
-## Tecnologie
-- **NodeJs**
-- **CouchDB**
-- **RabbitMQ**
-
-
 ## Architettura
 
 Il server di backend gira interamente in un ambiente Docker, che oltre a gestire i singoli container offre un servizio di DNS, che permette il load balancing delle repliche dell' application server.
@@ -29,13 +22,13 @@ Inoltre Flu espone delle API REST proprie per visualizzare i risultati delle ela
 
 ## Prerequisiti
 ### Lato API:
-- **Docker**
-- **Docker compose**
+- **Docker** versione **20.10.xx**
+- **Docker compose** versione **1.27.4**
 
 ### Lato Client:
-- **React**
-- **Node JS**
-- **npm**
+- **React** versione **17.0.2**
+- **Node JS** versione **17.4.0**
+- **npm** versione **8.3.1**
 
 ## Installazione
 ### Lato API:
@@ -66,7 +59,9 @@ npm start
 Nel caso in cui l'utente decida di testare Flu senza l'ausilio del Client, è possibile trovare la documentazione delle API esposte nel percorso ./apidoc/index.html .
 
 ### Lato Client:
-Il Client react fornisce la possibilità di usufruire dei servizi di Flu all'indirizzo
+Il Client react fornisce la possibilità di usufruire dei servizi di Flu all'indirizzo http://localhost:3000.
+
+
 
 
 

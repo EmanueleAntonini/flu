@@ -11,7 +11,7 @@ Lo svolgimento dell'analisi è basato sulla costruzione di un **indicatore compo
 
 Il server di backend gira interamente in un ambiente Docker, che oltre a gestire i singoli container offre un servizio di DNS, che permette il load balancing delle repliche dell' application server.
 - **Nginx**: l'access point del server backend è il container Nginx che funge da reverse proxy e implementa i protocolli http e https.
-- **RabbitMQ e Logger**: la gestione dei log dell'application server (Flu) è demandata a RabbitMQ e al Logger che, tramite comunicazioni asincrone basate sul protocollo amqp.
+- **RabbitMQ e Logger**: la gestione dei log dell'application server (Flu) è demandata a RabbitMQ e al Logger tramite comunicazioni asincrone basate sul protocollo amqp.
 - **Flu**: Flu ricopre il ruolo dell'application server che gestisce ed elabora le risorse dinamiche ottenute interrogando le API REST di Twitter (OAuth2) e gNews.
 Inoltre Flu espone delle API REST proprie per visualizzare i risultati delle elaborazioni e per sottomettere nuove ricerche.  
 - **CouchDB**: CouchDB è l'elemento che offre la persistenza delle informazioni generate da Flu ed è interrogato tramite API REST. 

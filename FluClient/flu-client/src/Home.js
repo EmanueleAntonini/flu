@@ -10,6 +10,7 @@ const Home = () => {
            <p><strong>Flu</strong> è un progetto ideato per misurare l'<strong>influenza</strong> di un dato individuo nel contesto dei social media e della rete in genere.</p>
            <br />
            <br />
+           <br />
            <p><label><b>Progetto svolto da:</b></label>
            <br />
            <label><i> Emanuele Antonini</i></label>

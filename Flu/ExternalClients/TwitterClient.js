@@ -1,7 +1,6 @@
 var request = require('request');
 const logger = require('../Logger/logProducer');
 
-require('dotenv').config({ path: '../.env' });
 
 const TWITTER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAH3zLQEAAAAA7nM11LIkcmJvZL9MsQ4zlBYZpmg%3DcZ97AckutD4HRM1TW99XI4hpFvk7yu3JSwWQsUNNb1CtaHy9o0';
 

@@ -1,7 +1,4 @@
 var amqp = require('amqplib/callback_api');
-require('dotenv').config({ path: '../.env' })
-
-const RABBITMQ_PATH = process.env.RABBITMQ_PATH;
 
 function log(msg, cat) {
     amqp.connect("amqp://rabbitmq", function (error0, connection) {

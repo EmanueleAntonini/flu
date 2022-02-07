@@ -1,7 +1,6 @@
 
 var request = require('request');
 const logger = require('../Logger/logProducer');
-require('dotenv').config({ path: '../.env' })
 
 const GNEWS_TOKEN = '257ef7e1e8f8362a1397ae3a16f1c56e';
 

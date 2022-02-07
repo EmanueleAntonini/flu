@@ -32,8 +32,14 @@ function searchTweets(query, username) {
         };
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                logger.log("Found tweets for user: " + username, "INFO");
-                resolve(JSON.parse(body));
+                result=JSON.parse(body);
+                if (result.meta.result_count>0) {
+                    logger.log("Found tweets for user: " + username, "INFO");
+                    resolve(result);
+                } else {
+                    logger.log("User " + username + "'s last action was done more than 30 days ago ", "DEBUG");
+                    resolve(null);
+                }
             }
             else {
                 logger.log("Error for user " + username + "'s tweets params search", "ERROR");
@@ -71,11 +77,12 @@ async function retrieveTwitterParams(query, username) {
         var likes = 0;
         var reply = 0;
         var retweet = 0;
-        for (const tweet of tweets.data) {
-            likes += tweet.public_metrics.like_count;
-            reply += tweet.public_metrics.reply_count;
-            retweet += tweet.public_metrics.retweet_count;
-        };
+        if (tweets != null)
+            for (const tweet of tweets.data) {
+                likes += tweet.public_metrics.like_count;
+                reply += tweet.public_metrics.reply_count;
+                retweet += tweet.public_metrics.retweet_count;
+            };
         var followers = await viewFollowers(username);
 
         twitterParams.setLike(likes);
@@ -85,7 +92,11 @@ async function retrieveTwitterParams(query, username) {
         logger.log("Twitter metrics defined for user: " + username, "INFO");
         return twitterParams;
     } catch (error) {
-        logger.log("Error while retrieving twitter params for user: " + username , "ERROR");
+        logger.log("Error while retrieving twitter params for user: " + username, "ERROR");
+        twitterParams.setLike(0);
+        twitterParams.setReply(0);
+        twitterParams.setRetweet(0);
+        twitterParams.setFollowers(0);
         return twitterParams;
     }
 
